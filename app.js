@@ -2,40 +2,20 @@
 
 const express = require('express');
 const connectDb = require('./config/mongoose');
-const User = require('./models/userSchema');
-const bcrypt = require('bcrypt');
+const userRouter = require('./routes/userRouter')
+
 
 
 const app = express();
 
 
 
+
 app.use(express.json());
+app.use('/', userRouter);
 
 
-app.post('/signup',async(req, res)=>{
-    try{
-        const {firstName, lastName, email, password} = req.body;
-        //encrypt the password before saving to database
-        const hasedPassword = await bcrypt.hash(password, 10);
-        console.log(hasedPassword);
-        const user = new User({
-            firstName,
-            lastName,
-            email,
-            password: hasedPassword
-        })
-        await user.save();
-        res.status(201).json({user,message:"user Created successfully"});
-    }catch (err) {
-  console.error(err);
 
-  res.status(500).json({
-    message: err.message,
-    stack: err.stack   //  only in dev, remove in production
-  });
-}
-})
 app.get('/',(req, res)=>{
     res.send("hellow world");
 })
