@@ -24,3 +24,22 @@
         
     })  
     - save userData in database with userDAta.save()  
+
+
+
+
+### login route
+  - app.post('/login',(req, res) =>{
+
+    //token initialize
+    //set on cookie
+  })
+
+
+
+
+### update user infor route
+-  app.patch('/update/:userid',(req,res) =>{
+    // get userid from params
+    //update data of user in database
+})

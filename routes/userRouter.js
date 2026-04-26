@@ -65,4 +65,49 @@ userRouter.post('/login',async(req, res)=>{
 })
 
 
+
+
+//user update route
+userRouter.patch('/update/:userid',async (req, res)=>{
+ try{
+   const {userid} = req.params;
+  //find the user by id from database
+  const user =await User.findById( userid);
+  if(!user){
+    throw new Error({message:"user not found"});
+  }
+  //update the user 
+  const allowedUpdates = ['firstName', "lastName","profilePic","coverPic", "age","gender", "about", "skills"];
+
+
+  const isAllowedUpdates = Object.keys(req.body).forEach((key)=>{
+    if(!allowedUpdates.includes(key)){
+      throw new Error({message:`${key} is not allowed to update`});
+    } 
+  })
+
+   const updatedUser = await User.findByIdAndUpdate(userid,req.body,{new:true, runValidators: true});
+   if(!updatedUser){
+    throw new Error({message:"user not found"});
+   }
+
+   res.status(200).json({message: "user updated successfully", updatedUser});
+
+ }catch(err){
+  res.status(500).json({message:err.message,stack: err.stack})
+ }
+})
+
+
+
+
+// user delete route
+
+
+
+
+
+//user profile route
+
+
 module.exports = userRouter;
