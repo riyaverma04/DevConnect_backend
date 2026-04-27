@@ -49,3 +49,17 @@ app.get('/profile/:userid',(req,res) =>{
     // get userid from params
     //get the user from database
 })
+
+
+
+### added authUser middleware for authentication
+ 
+
+
+### updated protected routes
+  - GET/profile
+  - PATCH/update
+  - DELETE/delete   
+
+### added cookie-parser
+ - npm i cookie-parser 

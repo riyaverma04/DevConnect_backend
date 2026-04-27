@@ -5,6 +5,8 @@ const jwt = require('jsonwebtoken');
 const userRouter = express.Router();
 const User = require('../models/userSchema');
 const bcrypt = require('bcrypt');
+const authUser = require('../middleware/auth.middleware');
+
 
 
 
@@ -68,11 +70,12 @@ userRouter.post('/login',async(req, res)=>{
 
 
 //user update route
-userRouter.patch('/update/:userid',async (req, res)=>{
+userRouter.patch('/update',authUser,async (req, res)=>{
  try{
-   const {userid} = req.params;
+  //  const {userid} = req.params;
   //find the user by id from database
-  const user =await User.findById( userid);
+    const currentUser = req.user;
+  const user =await User.findById( currentUser._id);
   if(!user){
     throw new Error({message:"user not found"});
   }
@@ -86,7 +89,7 @@ userRouter.patch('/update/:userid',async (req, res)=>{
     } 
   })
 
-   const updatedUser = await User.findByIdAndUpdate(userid,req.body,{new:true, runValidators: true});
+   const updatedUser = await User.findByIdAndUpdate(currentUser._id,req.body,{new:true, runValidators: true});
    if(!updatedUser){
     throw new Error({message:"user not found"});
    }
@@ -102,16 +105,16 @@ userRouter.patch('/update/:userid',async (req, res)=>{
 
 
 // user delete route
-userRouter.delete("/delete/:userid", async(req, res) =>{
+userRouter.delete("/delete/", authUser, async(req, res) =>{
 
   try{
     //get the user from userid
-    const {userid} = req.params;
+    const currentUser = req.user;
 
 
 
     //delete the user
-    const deletedUser = await User.findByIdAndDelete(userid);
+    const deletedUser = await User.findByIdAndDelete(currentUser._id);
     if(!deletedUser){
       throw new Error("user didn't found")
     }
@@ -126,14 +129,15 @@ userRouter.delete("/delete/:userid", async(req, res) =>{
 
 
 //user profile route
-userRouter.get("/profile/:userid", async(req, res)=>{
+userRouter.get("/profile", authUser, async(req, res)=>{
 
   try{
     //get the userid from url
-    const {userid} = req.params;
+    // const {userid} = req.params;
+    const currentUser = req.user;
 
     //find the user using userid from database
-    const user = await User.findById({_id: userid});
+    const user = await User.findById({_id: currentUser._id});
     if(!user){
       throw new Error({message:"user not found"});
     }

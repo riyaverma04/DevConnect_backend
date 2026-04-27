@@ -3,6 +3,7 @@
 const express = require('express');
 const connectDb = require('./config/mongoose');
 const userRouter = require('./routes/userRouter')
+const cookieParser = require("cookie-parser");
 
 
 
@@ -12,6 +13,7 @@ const app = express();
 
 
 app.use(express.json());
+app.use(cookieParser());
 app.use('/', userRouter);
 
 
