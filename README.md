@@ -38,8 +38,14 @@
 
 
 
-### update user infor route
+### update user info route
 -  app.patch('/update/:userid',(req,res) =>{
     // get userid from params
     //update data of user in database
+})
+
+### get user profile route
+app.get('/profile/:userid',(req,res) =>{
+    // get userid from params
+    //get the user from database
 })

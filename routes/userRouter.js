@@ -102,12 +102,50 @@ userRouter.patch('/update/:userid',async (req, res)=>{
 
 
 // user delete route
+userRouter.delete("/delete/:userid", async(req, res) =>{
+
+  try{
+    //get the user from userid
+    const {userid} = req.params;
+
+
+
+    //delete the user
+    const deletedUser = await User.findByIdAndDelete(userid);
+    if(!deletedUser){
+      throw new Error("user didn't found")
+    }
+    res.status(201).json({deletedUser})
+  }catch(err){
+    res.status(500).json({message: err.message, stack: err.stack})
+  }
+})
 
 
 
 
 
 //user profile route
+userRouter.get("/profile/:userid", async(req, res)=>{
+
+  try{
+    //get the userid from url
+    const {userid} = req.params;
+
+    //find the user using userid from database
+    const user = await User.findById({_id: userid});
+    if(!user){
+      throw new Error({message:"user not found"});
+    }
+
+    //send user 
+    
+    res.status(200).json({user, message: "user found"})
+
+  }catch(err){
+    res.status(500).json({message:err.message , stack: err.stack})
+  }
+})
 
 
 module.exports = userRouter;
