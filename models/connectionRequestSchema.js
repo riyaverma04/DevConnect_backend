@@ -14,8 +14,8 @@ const connectionRequestSchema = new mongoose.Schema({
     status: {
         type:String,
         enum:{
-            values: ["pending", "accepted", "rejected","interested"],
-            message: "status should be either pending, accepted, rejected or interested"
+            values: ["pending", "accepted", "rejected","interested","ignored"],
+            message: "status should be either pending, accepted, rejected, ignored or interested"
         },
        
     }

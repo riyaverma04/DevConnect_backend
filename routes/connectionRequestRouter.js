@@ -29,8 +29,8 @@ connectionRouter.post("/send/:status/:receiverId",authUser, async(req,res) =>{
 
 
         //check status it should be either interested or rejected
-        if(status !== "interested" && status !== "rejected"){
-            throw new Error("status should be either interested or rejected");
+        if(status !== "interested" && status !== "ignored"){
+            throw new Error("status should be either interested or ignored");
         }
 
 

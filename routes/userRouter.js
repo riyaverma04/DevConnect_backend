@@ -125,6 +125,17 @@ userRouter.delete("/delete/", authUser, async(req, res) =>{
 })
 
 
+//logout user profile
+userRouter.post("/logout", authUser, async(req, res)=>{
+  try{
+    res.clearCookie("token"); 
+    res.status(200).json({message: "logout successful"});
+  }catch(err){
+    res.status(500).json({message: err.message, stack: err.stack})
+  } 
+})  
+
+
 
 
 
@@ -150,6 +161,8 @@ userRouter.get("/profile", authUser, async(req, res)=>{
     res.status(500).json({message:err.message , stack: err.stack})
   }
 })
+
+
 
 
 module.exports = userRouter;
