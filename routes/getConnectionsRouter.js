@@ -135,6 +135,11 @@ connectionRouter.get("/user/connections" , authUser, async( req, res) =>{
 
 connectionRouter.get("/feed", authUser, async(req, res) =>{
     try{
+        let limit = parseInt(req.query.limit) || 10; // Number of users to return per page
+        const page = parseInt(req.query.page) || 1; // Current page number
+        limit = limit > 50 ? 50 : limit; // Set a maximum limit 
+        const skip = (page - 1) * limit; // Calculate the number of documents to skip
+
         const loggedInUser = req.user
         //feed should ignore the connections 
         //and user should not see his/her own profile in feed
@@ -163,7 +168,7 @@ connectionRouter.get("/feed", authUser, async(req, res) =>{
             ]
 
 
-       }).select(USER_SAFE_DATA)
+       }).select(USER_SAFE_DATA).skip(skip).limit(limit);
 
 
 

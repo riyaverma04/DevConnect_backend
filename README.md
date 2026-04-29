@@ -174,4 +174,16 @@ if (connection.senderId._id.toString() === loggedInUser._id.toString()) {
 
        }).select(USER_SAFE_DATA)
 
-       ```
+```
+
+
+
+ ### pagination
+ - to limit the user on feed 
+ - /feed?page=1&limit=10 => 1-10 .skip(1) .limit(10)
+ - /feed?page=2&limit=10 => 1-10 .skip(11) .limit(20)
+ - /feed?page=3&limit=10 => 1-10 .skip(21) .limit(30)
+
+
+
+
