@@ -137,3 +137,41 @@ if (connection.senderId._id.toString() === loggedInUser._id.toString()) {
 } else {
   return connection.senderId;
 }
+
+
+
+### get all requests route
+ - /requests/received
+
+
+### feed of a user
+ - user will not see the user's profile he has send the request or recieved requests and his connections
+ - use new Set() algorithm to add the values but don't want to repeat
+ - used $and query for checks 
+ - used comparison query like $nin(not in ) and $ne( not equal )
+
+
+ ```json
+   const getConnection = await ConnectionRequest.find({
+            $or:[{senderId: loggedInUser._id},{receiverId: loggedInUser._id}],
+        }).select("senderId receiverId");
+
+        const hideUserFromFeed = new Set();
+        const hideUserIdArray = getConnection.forEach((req) =>{
+             hideUserFromFeed.add(req.senderId.toString()),
+            hideUserFromFeed.add(req.receiverId.toString())
+     } )
+        console.log(hideUserFromFeed)
+
+        const feedUser = await User.find({
+            $and:[
+               { _id:{ $nin : Array.from(hideUserFromFeed)}},
+                {
+                    _id:{$ne: loggedInUser._id}
+                }
+            ]
+
+
+       }).select(USER_SAFE_DATA)
+
+       ```

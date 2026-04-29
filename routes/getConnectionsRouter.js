@@ -6,6 +6,29 @@ const User = require("../models/userSchema");
 const connectionRouter = express.Router();
 
 
+const USER_SAFE_DATA="firstName  lastName gender about skills profileUrl"
+
+//get all the request recieved
+connectionRouter.get('/requests/received',authUser, async(req, res) =>{
+    try{
+        const loggedInUser = req.user;
+        const receivedRequests = await ConnectionRequest.find({
+            receiverId : loggedInUser,
+            status: 'interested'
+        })
+
+        if(receivedRequests.length === 0){
+            res.status(200).json({message: "No requests "});
+        }
+
+        res.status(200).json({message: "there are list of your requests", receivedRequests});
+        
+    }catch(err){
+        res.status(500).json({message: err.message, stack: err.stack})
+    }
+})
+
+
 //accepting or rejecting the conneciton request
 connectionRouter.post('/requests/:status/:receiverId', authUser, async (req, res) =>{
 
@@ -101,6 +124,57 @@ connectionRouter.get("/user/connections" , authUser, async( req, res) =>{
 
     }catch(err){
         return res.status(500).json({message: err.message , stack: err.stack});
+    }
+})
+
+
+
+
+
+//get the feed 
+
+connectionRouter.get("/feed", authUser, async(req, res) =>{
+    try{
+        const loggedInUser = req.user
+        //feed should ignore the connections 
+        //and user should not see his/her own profile in feed
+        //status can be "ingnored,  interested"
+        //all the user of the app
+
+
+        //get all the connections 
+        const getConnection = await ConnectionRequest.find({
+            $or:[{senderId: loggedInUser._id},{receiverId: loggedInUser._id}],
+        }).select("senderId receiverId");
+
+        const hideUserFromFeed = new Set();
+        const hideUserIdArray = getConnection.forEach((req) =>{
+             hideUserFromFeed.add(req.senderId.toString()),
+            hideUserFromFeed.add(req.receiverId.toString())
+     } )
+        console.log(hideUserFromFeed)
+
+        const feedUser = await User.find({
+            $and:[
+               { _id:{ $nin : Array.from(hideUserFromFeed)}},
+                {
+                    _id:{$ne: loggedInUser._id}
+                }
+            ]
+
+
+       }).select(USER_SAFE_DATA)
+
+
+
+
+        res.status(200).json({feedUser})
+
+
+
+
+    }catch(err){
+        res.status(500).json({messsage: err.message, stack: err.stack});
     }
 })
 
