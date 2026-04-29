@@ -186,4 +186,21 @@ if (connection.senderId._id.toString() === loggedInUser._id.toString()) {
 
 
 
+### cors middleware
+## add CORS middleware to enable cross-origin requests
+- npm i cors
+- require('cors')
+- app.use(cors())
+- it is important to add whitelist of frontend url to access token in not secured url
+```json 
+app.use(cors({
+    //whitelist the frontend url
+    //need to whitelist the frontend url because in development it is not secure
+    origin : "http://localhost:5173",
+    credentials: true, //allow cookies to be sent with requests
+}))
+```
+- need to add withCredential:tru in frontend axios 
+
+
 

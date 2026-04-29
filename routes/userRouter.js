@@ -56,12 +56,13 @@ userRouter.post('/login',async(req, res)=>{
    const token = await user.jwtToken(user._id);
    //setting the token on cookie
    res.cookie("token", token,{expires: new Date(Date.now() + 3600000)})
-    res.status(200).json({message: "login successful"});
+    res.status(200).json({message: "login successful",});
 
 
 
    }catch(err){
-    res.status(500).json({message: err.message,
+    console.log(err)
+    res.status(500).json({message: err,
     stack: err.stack   }) //  only in dev, remove in production   
    }
 })
