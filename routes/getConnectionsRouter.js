@@ -98,7 +98,7 @@ connectionRouter.get("/user/connections" , authUser, async( req, res) =>{
                 {receiverId: loggedInUser._id.toString() , status: "accepted"},
                 {senderId : loggedInUser._id.toString(), status: "accepted"}
             ]
-        }).populate("senderId", "firstName lastName  profileUrl , about , skills").populate("receiverId", "firstName lastName  profileUrl , about , skills");
+        }).populate("senderId", "firstName lastName  profileUrl , about , skills,gender").populate("receiverId", "firstName lastName  profileUrl , about , skills,gender");
 
 
         if(connectionsData.length === 0){

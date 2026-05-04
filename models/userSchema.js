@@ -53,12 +53,17 @@ const userSchema = new mongoose.Schema({
             }
         }
     },
-    profilePic:{
-        type: String,
-        default: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
-
-    },
-    coverPic:{
+   profileUrl: {
+  url: {
+    type: String,
+    default: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6rKwDbEN_M9FCcve-ozbDkUUn6VkEZ7xfVw&s"
+  },
+  public_id: {
+    type: String,
+    default: ""
+  }
+},
+    coverUrl:{
         type: String,
 
 
@@ -71,7 +76,7 @@ const userSchema = new mongoose.Schema({
     gender:{
         type: String,
         enum:{
-            values: ["male", "female", "other"],
+            values: ["male", "female", "others" ,""],
             message:"gender is not valid"
         },
         
@@ -91,7 +96,8 @@ const userSchema = new mongoose.Schema({
 
 
 userSchema.methods.jwtToken = async function(userId){
-    return await jwt.sign({userId},process.env.JWT_SECRET,{expiresIn: '1h'  })
+    // return await jwt.sign({userId},process.env.JWT_SECRET,{expiresIn: '1h'  })
+    return await jwt.sign({ userId: this._id }, process.env.JWT_SECRET)
     
 }
 

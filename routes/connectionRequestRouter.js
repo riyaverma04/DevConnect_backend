@@ -13,7 +13,7 @@ connectionRouter.post("/send/:status/:receiverId",authUser, async(req,res) =>{
         //check if the receiverId is valid or not
         const receiver = await User.findById(receiverId);
         if(!receiver){
-            throw new Error("person you want to connect with is not found");
+             return res.status(400).json({ message: "user not found" });
         }
             //check if the connection request is already sent or not
             const existingConnection = await ConnectionRequest.findOne({
@@ -24,7 +24,7 @@ connectionRouter.post("/send/:status/:receiverId",authUser, async(req,res) =>{
                 ]
             });
             if(existingConnection){
-                throw new Error("connection request already sent");
+               return res.status(400).json({ message: "Connection request already sent" });
             }
 
 
@@ -37,7 +37,7 @@ connectionRouter.post("/send/:status/:receiverId",authUser, async(req,res) =>{
 
         //senderId and receiverId should not be same
         if(senderId.toString() === receiverId.toString()){
-            throw new Error("you cannot send connection request to yourself");
+            return res.status(400).json({ message: "connection request already sent" });
         }
         
         //send the connection request

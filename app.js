@@ -14,12 +14,23 @@ const app = express();
 
 
 //adding cors middleware to allow cross-origin requests from frontend
+// app.options("*", cors());
 app.use(cors({
-    //whitelist the frontend url
-    //need to whitelist the frontend url because in development it is not secure
-    origin : "http://localhost:5173",
-    credentials: true, //allow cookies to be sent with requests
+    // //whitelist the frontend url
+    // //need to whitelist the frontend url because in development it is not secure
+    // origin : "http://localhost:5173",
+    
+    // credentials: true, //allow cookies to be sent with requests
+    // methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+    //  allowedHeaders: ["Content-Type", "Authorization"],
+     origin: "http://localhost:5173",
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"]
+    
 }))
+
+
 app.use(express.json());
 app.use(cookieParser());
 
