@@ -30,7 +30,13 @@ userRouter.post('/signup',async(req, res)=>{
             email,
             password: hasedPassword
         })
-        await user.save();
+         
+   await user.save();
+   //generate thee token using jwt
+   const token = await user.jwtToken(user._id);
+   //setting the token on cookie
+   res.cookie("token", token,{expires: new Date(Date.now() + 3600000)})
+        
         res.status(201).json({user,message:"user Created successfully"});
     }catch (err) {
   console.error(err);
@@ -243,7 +249,7 @@ userRouter.get('/profile/:userId/view',async(req, res)=>{
     const {userId} = req.params;
     const userProfile = await User.findById({_id:userId});
     if(!userProfile){
-      throw new Error("profile not found")
+     return res.status(400).json({message:" user not found"})
     }
      //showing the data with hashedpassword in not premitted so need to delete the password first then send it to the res but mongoose data is not a javascript object so we need to convert it to object thenonly we can delete the password from that object and send response 
      const userProfileResponse = userProfile.toObject();

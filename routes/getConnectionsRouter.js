@@ -13,15 +13,18 @@ connectionRouter.get('/requests/received',authUser, async(req, res) =>{
     try{
         const loggedInUser = req.user;
         const receivedRequests = await ConnectionRequest.find({
+            // ssh -i "devConnect-secret.pem" ubuntu@ec2-16-170-163-140.eu-north-1.compute.amazonaws.com
+        
             receiverId : loggedInUser,
-            status: 'interested'
-        })
+            status: 'interested',
+            
+        }).populate("senderId", "firstName lastName  profileUrl  about  skills gender").where("senderId").ne(null);
 
         if(receivedRequests.length === 0){
-            res.status(200).json({message: "No requests "});
+            return res.status(200).json({message: "No requests "});
         }
 
-        res.status(200).json({message: "there are list of your requests", receivedRequests});
+         return res.status(200).json({message: "there are list of your requests", receivedRequests});
         
     }catch(err){
         res.status(500).json({message: err.message, stack: err.stack})
@@ -180,6 +183,34 @@ connectionRouter.get("/feed", authUser, async(req, res) =>{
 
     }catch(err){
         res.status(500).json({messsage: err.message, stack: err.stack});
+    }
+})
+
+
+
+
+//remove connection 
+connectionRouter.delete('/connection-remove/:id',authUser, async(req, res)=>{
+    try{
+        const connectionUserId = req.params.id;
+        const loggedInUser = req.user;
+        const connectionDelete = await ConnectionRequest.findOneAndDelete({
+            $or:[
+                {senderId: connectionUserId , receiverId: loggedInUser._id, status: "accepted"},
+                {senderId: loggedInUser._id, receiverId: connectionUserId , status: "accepted"}
+
+            ]
+    })
+
+    if(!connectionDelete){
+        res.status(400).json({message: "connection not  found"});
+    }
+
+    res.status(200).json({message:"connection removed succesfully", connectionDelete})
+
+
+    }catch(err){
+        res.status(500).json({message:err.message, stack:stack.err});
     }
 })
 
