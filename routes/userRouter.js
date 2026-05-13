@@ -148,7 +148,13 @@ userRouter.patch('/update', (req, res, next) => {
     if(key !== "age"){
       user[key] = req.body[key];
     }else{
-      user[key]= userAge;
+      if(req.body.age===""){
+        user[key] =undefined;
+
+      }else{
+
+        user[key]= userAge;
+      }
       
     }
     });

@@ -43,16 +43,21 @@ connectionRouter.post('/requests/:status/:receiverId', authUser, async (req, res
         //check the receiverId exists or not
         const isReceiverIdExist = await User.findById({_id: receiverId});
         if(!isReceiverIdExist){
-            throw new Error("User does not exist")
+            return res.status(400).json({message: "User does not exist"})
+            
         }
 
         //check the status get from params only should be accepted or rejected
         if(status != "accepted" && status != "rejected"){
-            throw new Error("you are trying to send wrong status");
+             return res.status(400).json({message: "you are trying to send wrong status"})
+           
         }
         //throw error if user is trying to accept or reject the  connection request to himself
         if(loggedInUser._id.toString() === receiverId.toString()){
-            throw new Error("you cannot accept or reject the connection request to yourself");
+            return res.status(400).json({message:"you cannot accept or reject the connection request to yourself"})
+
+            
+            
         }
 
 
@@ -66,7 +71,9 @@ connectionRouter.post('/requests/:status/:receiverId', authUser, async (req, res
         });
 
         if(!requestData){
-            throw new Error("no connection request found from this user");
+            return res.status(400).json({message:"no connection request found from this user"})
+
+            
         }
 
         //change the status of connection request to accepted or rejected
