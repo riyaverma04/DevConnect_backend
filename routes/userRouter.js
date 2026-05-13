@@ -98,7 +98,7 @@ console.log("jfhkdjfdkl")
 userRouter.patch('/update', (req, res, next) => {
     console.log("➡️ Before multer");
     next();
-  },upload.single('photo'),authUser,async (req, res)=>{
+  },authUser,upload.single('photo'),async (req, res)=>{
  try{
   //  const {userid} = req.params;
   //find the user by id from database
@@ -138,8 +138,19 @@ userRouter.patch('/update', (req, res, next) => {
         public_id: req.file.filename,
       };
     }
+    //processing the age 
+    const todayYear= new Date().getFullYear() ;
+    // console.log(todayDate);
+    const userYear= new Date(age).getFullYear();
+    const userAge =  todayYear - userYear ;
+
   updates.forEach((key) => {
+    if(key !== "age"){
       user[key] = req.body[key];
+    }else{
+      user[key]= userAge;
+      
+    }
     });
 
     await user.save();
