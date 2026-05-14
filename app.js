@@ -1,6 +1,9 @@
 // DyYOU2NWcpVmn7XI
 
 const express = require('express');
+const {createServer} = require('node:http');
+const socketServer = require('./utils/socket');
+
 const connectDb = require('./config/mongoose');
 const userRouter = require('./routes/userRouter')
 const connectionRouter = require('./routes/getConnectionsRouter')
@@ -11,6 +14,8 @@ const cors = require('cors')
 
 
 const app = express();
+const server = createServer(app);
+socketServer(server);
 
 
 //adding cors middleware to allow cross-origin requests from frontend
@@ -46,7 +51,7 @@ app.get('/',(req, res)=>{
 
 connectDb().then(()=>{
     console.log("connected to mongodb");
-    app.listen(7777,()=>{
+    server.listen(7777,()=>{
     console.log("server is running on port 7777");
   })
 })
