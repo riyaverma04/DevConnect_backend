@@ -1,4 +1,5 @@
 const {Server} = require('socket.io');
+const UserMessage = require('../models/messageSchema');
 
 
 const socketServer=(server)=>{
@@ -17,9 +18,17 @@ const socketServer=(server)=>{
 
             console.log("joined room" , roomId);
         })
-        socket.on('send_message',(data)=>{
+        socket.on('send_message',async(data)=>{
             console.log("message:" , data);
-            io.to(data.roomId).emit("receive_message",data);
+            const newMessage = new UserMessage({
+                roomId : data.roomId,
+                senderId: data.senderId,
+                message: data.text,
+                
+            })
+            //saving the message in db 
+            const savedMessage=  await newMessage.save();
+            io.to(data.roomId).emit("receive_message",savedMessage);
         })
          socket.on("disconnect",()=>{
             console.log('user disconnected: ',  socket.id);

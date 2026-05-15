@@ -6,6 +6,7 @@ const socketServer = require('./utils/socket');
 
 const connectDb = require('./config/mongoose');
 const userRouter = require('./routes/userRouter')
+const messageRouter= require('./routes/messageRouter')
 const connectionRouter = require('./routes/getConnectionsRouter')
 const connectionRequestRouter = require('./routes/connectionRequestRouter');
 const cookieParser = require("cookie-parser");
@@ -42,6 +43,7 @@ app.use(cookieParser());
 app.use('/', userRouter);
 app.use('/', connectionRequestRouter);
 app.use('/', connectionRouter);
+app.use('/', messageRouter);
 
 
 
