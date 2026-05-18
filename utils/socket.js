@@ -22,6 +22,7 @@ const socketServer=(server)=>{
             console.log("message:" , data);
             const newMessage = new UserMessage({
                 roomId : data.roomId,
+                participants:[data.receiverId , data.senderId],
                 senderId: data.senderId,
                 message: data.text,
                 
