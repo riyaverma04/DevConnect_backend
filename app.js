@@ -10,7 +10,8 @@ const messageRouter= require('./routes/messageRouter')
 const connectionRouter = require('./routes/getConnectionsRouter')
 const connectionRequestRouter = require('./routes/connectionRequestRouter');
 const cookieParser = require("cookie-parser");
-const cors = require('cors')
+const cors = require('cors');
+const postsRouter = require('./routes/postsRouter');
 
 
 
@@ -44,6 +45,7 @@ app.use('/', userRouter);
 app.use('/', connectionRequestRouter);
 app.use('/', connectionRouter);
 app.use('/', messageRouter);
+app.use('/',postsRouter);
 
 
 

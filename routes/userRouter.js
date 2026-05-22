@@ -69,6 +69,7 @@ userRouter.post('/login',async(req, res)=>{
    //setting the token on cookie
    res.cookie("token", token,{expires: new Date(Date.now() + 3600000)})
    const userFilteredData = {
+    id: user._id,
     firstName: user.firstName,
     lastName: user.lastName,
     profileUrl: user.profileUrl,
@@ -95,10 +96,7 @@ userRouter.post('/login',async(req, res)=>{
 
 //user update route
 console.log("jfhkdjfdkl")
-userRouter.patch('/update', (req, res, next) => {
-    console.log("➡️ Before multer");
-    next();
-  },authUser,upload.single('photo'),async (req, res)=>{
+userRouter.patch('/update',authUser,upload.single('photo'),async (req, res)=>{
  try{
   //  const {userid} = req.params;
   //find the user by id from database
